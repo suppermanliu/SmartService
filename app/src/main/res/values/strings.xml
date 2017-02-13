@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SmartService</string>
+    <string name="start">开始体验</string>
+    <string name="home">首页</string>
+    <string name="news">新闻中心</string>
+    <string name="smart">智慧服务</string>
+    <string name="gov">政务</string>
+    <string name="setting">设置</string>
+
 </resources>
