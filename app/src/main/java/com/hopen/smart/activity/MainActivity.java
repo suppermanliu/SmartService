@@ -4,13 +4,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.hopen.smart.R;
 import com.hopen.smart.adapter.MainVpFragmentAdapter;
+import com.hopen.smart.adapter.MenuRecycleAdapter;
 import com.hopen.smart.base.BaseFragment;
 import com.hopen.smart.base.LoadNetDataInterface;
+import com.hopen.smart.bean.NewsCenterBean;
 import com.hopen.smart.fragment.GovFragment;
 import com.hopen.smart.fragment.HomeFragment;
 import com.hopen.smart.fragment.NewsFragment;
@@ -45,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     RadioButton setting;
     public SlidingMenu slidingMenu;
 
+    public ArrayList<NewsCenterBean.DataBean> data;
+    private MenuRecycleAdapter adapter;
+    private RecyclerView recycleView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +63,21 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         group.setOnCheckedChangeListener(this);
         mainVp.addOnPageChangeListener(this);
         initSlidingMenu();
+    }
+
+    private void initRecycleView() {
+        recycleView = (RecyclerView) slidingMenu.findViewById(R.id.menu_rc);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        recycleView.setLayoutManager(manager);
+        adapter = new MenuRecycleAdapter(this, data);
+        recycleView.setAdapter(adapter);
+    }
+
+    //获取新闻中心传过来的数据
+    public void getDataFromNews(ArrayList data){
+        this.data = data;
+        initRecycleView();
     }
 
     private void initSlidingMenu() {
@@ -88,19 +111,19 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
                 break;
             case R.id.news:
-                item = 0;
+                item = 1;
                 slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
                 break;
             case R.id.smart:
-                item = 0;
+                item = 2;
                 slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
                 break;
             case R.id.gov:
-                item = 0;
+                item = 3;
                 slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
                 break;
             case R.id.setting:
-                item = 0;
+                item = 4;
                 slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
                 break;
             default:
@@ -144,5 +167,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    public BaseFragment getMainTabFragment(){
+        int currentItem = mainVp.getCurrentItem();
+        BaseFragment fragment = (BaseFragment) list.get(currentItem);
+        return fragment;
     }
 }
